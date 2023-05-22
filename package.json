@@ -1,55 +1,160 @@
 {
-  "_from": "@aws-crypto/supports-web-crypto@^3.0.0",
-  "_id": "@aws-crypto/supports-web-crypto@3.0.0",
+  "_from": "uuid@^9.0.0",
+  "_id": "uuid@9.0.0",
   "_inBundle": false,
-  "_integrity": "sha512-06hBdMwUAb2WFTuGG73LSC0wfPu93xWwo5vL2et9eymgmu3Id5vFAHBbajVWiGhPO37qcsdCap/FqXvJGJWPIg==",
-  "_location": "/@aws-crypto/supports-web-crypto",
+  "_integrity": "sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==",
+  "_location": "/uuid",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "@aws-crypto/supports-web-crypto@^3.0.0",
-    "name": "@aws-crypto/supports-web-crypto",
-    "escapedName": "@aws-crypto%2fsupports-web-crypto",
-    "scope": "@aws-crypto",
-    "rawSpec": "^3.0.0",
+    "raw": "uuid@^9.0.0",
+    "name": "uuid",
+    "escapedName": "uuid",
+    "rawSpec": "^9.0.0",
     "saveSpec": null,
-    "fetchSpec": "^3.0.0"
+    "fetchSpec": "^9.0.0"
   },
   "_requiredBy": [
-    "/@aws-crypto/sha256-browser"
+    "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@aws-crypto/supports-web-crypto/-/supports-web-crypto-3.0.0.tgz",
-  "_shasum": "5d1bf825afa8072af2717c3e455f35cda0103ec2",
-  "_spec": "@aws-crypto/supports-web-crypto@^3.0.0",
-  "_where": "/Users/imac/Downloads/loud-backspace.github.io-main/backend-express-app/node_modules/@aws-crypto/sha256-browser",
-  "author": {
-    "name": "AWS Crypto Tools Team",
-    "email": "aws-cryptools@amazon.com",
-    "url": "https://docs.aws.amazon.com/aws-crypto-tools/index.html?id=docs_gateway#lang/en_us"
+  "_resolved": "https://registry.npmjs.org/uuid/-/uuid-9.0.0.tgz",
+  "_shasum": "592f550650024a38ceb0c562f2f6aa435761efb5",
+  "_spec": "uuid@^9.0.0",
+  "_where": "/Users/imac/Downloads/loud-backspace.github.io-main/backend-express-app",
+  "bin": {
+    "uuid": "dist/bin/uuid"
+  },
+  "browser": {
+    "./dist/md5.js": "./dist/md5-browser.js",
+    "./dist/native.js": "./dist/native-browser.js",
+    "./dist/rng.js": "./dist/rng-browser.js",
+    "./dist/sha1.js": "./dist/sha1-browser.js",
+    "./dist/esm-node/index.js": "./dist/esm-browser/index.js"
   },
   "bugs": {
-    "url": "https://github.com/aws/aws-sdk-js-crypto-helpers/issues"
+    "url": "https://github.com/uuidjs/uuid/issues"
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "tslib": "^1.11.1"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "deprecated": false,
-  "description": "Provides functions for detecting if the host environment supports the WebCrypto API",
-  "gitHead": "7f56cee8f62bd65cd397eeec29c3c997215bd80c",
-  "homepage": "https://github.com/aws/aws-sdk-js-crypto-helpers/tree/master/packages/supports-web-crypto",
-  "license": "Apache-2.0",
-  "main": "./build/index.js",
-  "name": "@aws-crypto/supports-web-crypto",
+  "description": "RFC4122 (v1, v4, and v5) UUIDs",
+  "devDependencies": {
+    "@babel/cli": "7.18.10",
+    "@babel/core": "7.18.10",
+    "@babel/eslint-parser": "7.18.9",
+    "@babel/preset-env": "7.18.10",
+    "@commitlint/cli": "17.0.3",
+    "@commitlint/config-conventional": "17.0.3",
+    "bundlewatch": "0.3.3",
+    "eslint": "8.21.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-standard": "17.0.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-promise": "6.0.0",
+    "husky": "8.0.1",
+    "jest": "28.1.3",
+    "lint-staged": "13.0.3",
+    "npm-run-all": "4.1.5",
+    "optional-dev-dependency": "2.0.1",
+    "prettier": "2.7.1",
+    "random-seed": "0.3.0",
+    "runmd": "1.3.6",
+    "standard-version": "9.5.0"
+  },
+  "exports": {
+    ".": {
+      "node": {
+        "module": "./dist/esm-node/index.js",
+        "require": "./dist/index.js",
+        "import": "./wrapper.mjs"
+      },
+      "browser": {
+        "import": "./dist/esm-browser/index.js",
+        "require": "./dist/commonjs-browser/index.js"
+      },
+      "default": "./dist/esm-browser/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE.md",
+    "README.md",
+    "dist",
+    "wrapper.mjs"
+  ],
+  "homepage": "https://github.com/uuidjs/uuid#readme",
+  "keywords": [
+    "uuid",
+    "guid",
+    "rfc4122"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "*.{js,jsx,json,md}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix"
+    ]
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/esm-node/index.js",
+  "name": "uuid",
+  "optionalDevDependencies": {
+    "@wdio/browserstack-service": "7.16.10",
+    "@wdio/cli": "7.16.10",
+    "@wdio/jasmine-framework": "7.16.6",
+    "@wdio/local-runner": "7.16.10",
+    "@wdio/spec-reporter": "7.16.9",
+    "@wdio/static-server-service": "7.16.6"
+  },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/aws/aws-sdk-js-crypto-helpers.git"
+    "url": "git+https://github.com/uuidjs/uuid.git"
   },
   "scripts": {
-    "pretest": "tsc -p tsconfig.test.json",
-    "test": "mocha --require ts-node/register test/**/*test.ts"
+    "build": "./scripts/build.sh",
+    "bundlewatch": "npm run pretest:browser && bundlewatch --config bundlewatch.config.json",
+    "docs": "( node --version | grep -q 'v16' ) && ( npm run build && runmd --output=README.md README_js.md )",
+    "docs:diff": "npm run docs && git diff --quiet README.md",
+    "eslint:check": "eslint src/ test/ examples/ *.js",
+    "eslint:fix": "eslint --fix src/ test/ examples/ *.js",
+    "examples:browser:rollup:build": "cd examples/browser-rollup && npm install && npm run build",
+    "examples:browser:webpack:build": "cd examples/browser-webpack && npm install && npm run build",
+    "examples:node:commonjs:test": "cd examples/node-commonjs && npm install && npm test",
+    "examples:node:esmodules:test": "cd examples/node-esmodules && npm install && npm test",
+    "examples:node:jest:test": "cd examples/node-jest && npm install && npm test",
+    "lint": "npm run eslint:check && npm run prettier:check",
+    "md": "runmd --watch --output=README.md README_js.md",
+    "prepack": "npm run build",
+    "prepare": "cd $( git rev-parse --show-toplevel ) && husky install",
+    "pretest": "[ -n $CI ] || npm run build",
+    "pretest:benchmark": "npm run build",
+    "pretest:browser": "optional-dev-dependency && npm run build && npm-run-all --parallel examples:browser:**",
+    "pretest:node": "npm run build",
+    "prettier:check": "prettier --check '**/*.{js,jsx,json,md}'",
+    "prettier:fix": "prettier --write '**/*.{js,jsx,json,md}'",
+    "release": "standard-version --no-verify",
+    "test": "BABEL_ENV=commonjsNode node --throw-deprecation node_modules/.bin/jest test/unit/",
+    "test:benchmark": "cd examples/benchmark && npm install && npm test",
+    "test:browser": "wdio run ./wdio.conf.js",
+    "test:node": "npm-run-all --parallel examples:node:**",
+    "test:pack": "./scripts/testpack.sh"
   },
-  "types": "./build/index.d.ts",
-  "version": "3.0.0"
+  "sideEffects": false,
+  "standard-version": {
+    "scripts": {
+      "postchangelog": "prettier --write CHANGELOG.md"
+    }
+  },
+  "version": "9.0.0"
 }
