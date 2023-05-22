@@ -1,22 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es5",
     "module": "commonjs",
-    "declaration": true,
+    "target": "es5",
+    "lib": ["dom", "es5", "es2015.collection"],
     "strict": true,
     "sourceMap": true,
-    "downlevelIteration": true,
-    "importHelpers": true,
-    "noEmitHelpers": true,
-    "lib": [
-      "es5",
-      "es2015.promise",
-      "es2015.collection",
-      "es2015.iterable",
-      "es2015.symbol.wellknown"
-    ],
+    "declaration": true,
     "rootDir": "./src",
-    "outDir": "./build"
+    "outDir": "./build",
+    "importHelpers": true,
+    "noEmitHelpers": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules/**"]

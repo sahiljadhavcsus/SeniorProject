@@ -1,15 +1,31 @@
-# @aws-crypto/util
+# @aws-crypto/supports-web-crypto
 
-Helper functions
+Functions to check web crypto support for browsers.
 
 ## Usage
 
 ```
-import { convertToBuffer } from '@aws-crypto/util';
+import {supportsWebCrypto} from '@aws-crypto/supports-web-crypto';
 
-const data = "asdf";
-const utf8EncodedUint8Array = convertToBuffer(data);
+if (supportsWebCrypto(window)) {
+  // window.crypto.subtle.encrypt will exist
+}
+
 ```
+
+## supportsWebCrypto
+
+Used to make sure `window.crypto.subtle` exists and implements crypto functions
+as well as a cryptographic secure random source exists.
+
+## supportsSecureRandom
+
+Used to make sure that a cryptographic secure random source exists.
+Does not check for `window.crypto.subtle`.
+
+## supportsSubtleCrypto
+
+## supportsZeroByteGCM
 
 ## Test
 
