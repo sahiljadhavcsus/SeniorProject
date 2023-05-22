@@ -1,462 +1,280 @@
-<!--
-  -- This file is auto-generated from README_js.md. Changes should be made there.
-  -->
+# MongoDB NodeJS Driver
 
-# uuid [![CI](https://github.com/uuidjs/uuid/workflows/CI/badge.svg)](https://github.com/uuidjs/uuid/actions?query=workflow%3ACI) [![Browser](https://github.com/uuidjs/uuid/workflows/Browser/badge.svg)](https://github.com/uuidjs/uuid/actions?query=workflow%3ABrowser)
+The official [MongoDB](https://www.mongodb.com/) driver for Node.js.
 
-For the creation of [RFC4122](https://www.ietf.org/rfc/rfc4122.txt) UUIDs
+**Upgrading to version 4? Take a look at our [upgrade guide here](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/CHANGES_4.0.0.md)!**
 
-- **Complete** - Support for RFC4122 version 1, 3, 4, and 5 UUIDs
-- **Cross-platform** - Support for ...
-  - CommonJS, [ECMAScript Modules](#ecmascript-modules) and [CDN builds](#cdn-builds)
-  - Node 12, 14, 16, 18
-  - Chrome, Safari, Firefox, Edge browsers
-  - Webpack and rollup.js module bundlers
-  - [React Native / Expo](#react-native--expo)
-- **Secure** - Cryptographically-strong random values
-- **Small** - Zero-dependency, small footprint, plays nice with "tree shaking" packagers
-- **CLI** - Includes the [`uuid` command line](#command-line) utility
+## Quick Links
 
-**Upgrading from `uuid@3`?** Your code is probably okay, but check out [Upgrading From `uuid@3`](#upgrading-from-uuid3) for details.
+| what          | where                                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
+| documentation | [docs.mongodb.com/drivers/node](https://docs.mongodb.com/drivers/node)                                  |
+| api-doc       | [mongodb.github.io/node-mongodb-native/](https://mongodb.github.io/node-mongodb-native/)                |
+| npm package   | [www.npmjs.com/package/mongodb](https://www.npmjs.com/package/mongodb)                                  |
+| source        | [github.com/mongodb/node-mongodb-native](https://github.com/mongodb/node-mongodb-native)                |
+| mongodb       | [www.mongodb.com](https://www.mongodb.com)                                                              |
+| changelog     | [HISTORY.md](https://github.com/mongodb/node-mongodb-native/blob/HEAD/HISTORY.md)                       |
+| upgrade to v4 | [etc/notes/CHANGES_4.0.0.md](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/CHANGES_4.0.0.md) |
+| contributing  | [CONTRIBUTING.md](https://github.com/mongodb/node-mongodb-native/blob/HEAD/CONTRIBUTING.md)             |
 
-## Quickstart
+### Bugs / Feature Requests
 
-To create a random UUID...
+Think you’ve found a bug? Want to see a new feature in `node-mongodb-native`? Please open a
+case in our issue management tool, JIRA:
 
-**1. Install**
+- Create an account and login [jira.mongodb.org](https://jira.mongodb.org).
+- Navigate to the NODE project [jira.mongodb.org/browse/NODE](https://jira.mongodb.org/browse/NODE).
+- Click **Create Issue** - Please provide as much information as possible about the issue type and how to reproduce it.
 
-```shell
-npm install uuid
+Bug reports in JIRA for all driver projects (i.e. NODE, PYTHON, CSHARP, JAVA) and the
+Core Server (i.e. SERVER) project are **public**.
+
+### Support / Feedback
+
+For issues with, questions about, or feedback for the Node.js driver, please look into our [support channels](https://docs.mongodb.com/manual/support). Please do not email any of the driver developers directly with issues or questions - you're more likely to get an answer on the [MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/node-js-driver).
+
+### Change Log
+
+Change history can be found in [`HISTORY.md`](https://github.com/mongodb/node-mongodb-native/blob/HEAD/HISTORY.md).
+
+### Compatibility
+
+For version compatibility matrices, please refer to the following links:
+
+- [MongoDB](https://docs.mongodb.com/drivers/node/current/compatibility/#mongodb-compatibility)
+- [NodeJS](https://docs.mongodb.com/drivers/node/current/compatibility/#language-compatibility)
+
+#### Typescript Version
+
+We recommend using the latest version of typescript, however we currently ensure the driver's public types compile against `typescript@4.1.6`.
+This is the lowest typescript version guaranteed to work with our driver: older versions may or may not work - use at your own risk.
+Since typescript [does not restrict breaking changes to major versions](https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes) we consider this support best effort.
+If you run into any unexpected compiler failures against our supported TypeScript versions please let us know by filing an issue on our [JIRA](https://jira.mongodb.org/browse/NODE).
+
+## Installation
+
+The recommended way to get started using the Node.js 4.x driver is by using the `npm` (Node Package Manager) to install the dependency in your project.
+
+After you've created your own project using `npm init`, you can run:
+
+```bash
+npm install mongodb
+# or ...
+yarn add mongodb
 ```
 
-**2. Create a UUID** (ES6 module syntax)
+This will download the MongoDB driver and add a dependency entry in your `package.json` file.
 
-```javascript
-import { v4 as uuidv4 } from 'uuid';
-uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+If you are a Typescript user, you will need the Node.js type definitions to use the driver's definitions:
+
+```sh
+npm install -D @types/node
 ```
 
-... or using CommonJS syntax:
+## Troubleshooting
 
-```javascript
-const { v4: uuidv4 } = require('uuid');
-uuidv4(); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+The MongoDB driver depends on several other packages. These are:
+
+- [bson](https://github.com/mongodb/js-bson)
+- [bson-ext](https://github.com/mongodb-js/bson-ext)
+- [kerberos](https://github.com/mongodb-js/kerberos)
+- [mongodb-client-encryption](https://github.com/mongodb/libmongocrypt#readme)
+
+Some of these packages include native C++ extensions. Consult the [trouble shooting guide here](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/native-extensions.md) if you run into issues.
+
+## Quick Start
+
+This guide will show you how to set up a simple application using Node.js and MongoDB. Its scope is only how to set up the driver and perform the simple CRUD operations. For more in-depth coverage, see the [official documentation](https://docs.mongodb.com/drivers/node/).
+
+### Create the `package.json` file
+
+First, create a directory where your application will live.
+
+```bash
+mkdir myProject
+cd myProject
 ```
 
-For timestamp UUIDs, namespace UUIDs, and other options read on ...
+Enter the following command and answer the questions to create the initial structure for your new project:
 
-## API Summary
-
-|  |  |  |
-| --- | --- | --- |
-| [`uuid.NIL`](#uuidnil) | The nil UUID string (all zeros) | New in `uuid@8.3` |
-| [`uuid.parse()`](#uuidparsestr) | Convert UUID string to array of bytes | New in `uuid@8.3` |
-| [`uuid.stringify()`](#uuidstringifyarr-offset) | Convert array of bytes to UUID string | New in `uuid@8.3` |
-| [`uuid.v1()`](#uuidv1options-buffer-offset) | Create a version 1 (timestamp) UUID |  |
-| [`uuid.v3()`](#uuidv3name-namespace-buffer-offset) | Create a version 3 (namespace w/ MD5) UUID |  |
-| [`uuid.v4()`](#uuidv4options-buffer-offset) | Create a version 4 (random) UUID |  |
-| [`uuid.v5()`](#uuidv5name-namespace-buffer-offset) | Create a version 5 (namespace w/ SHA-1) UUID |  |
-| [`uuid.validate()`](#uuidvalidatestr) | Test a string to see if it is a valid UUID | New in `uuid@8.3` |
-| [`uuid.version()`](#uuidversionstr) | Detect RFC version of a UUID | New in `uuid@8.3` |
-
-## API
-
-### uuid.NIL
-
-The nil UUID string (all zeros).
-
-Example:
-
-```javascript
-import { NIL as NIL_UUID } from 'uuid';
-
-NIL_UUID; // ⇨ '00000000-0000-0000-0000-000000000000'
+```bash
+npm init -y
 ```
 
-### uuid.parse(str)
+Next, install the driver as a dependency.
 
-Convert UUID string to array of bytes
-
-|           |                                          |
-| --------- | ---------------------------------------- |
-| `str`     | A valid UUID `String`                    |
-| _returns_ | `Uint8Array[16]`                         |
-| _throws_  | `TypeError` if `str` is not a valid UUID |
-
-Note: Ordering of values in the byte arrays used by `parse()` and `stringify()` follows the left &Rarr; right order of hex-pairs in UUID strings. As shown in the example below.
-
-Example:
-
-```javascript
-import { parse as uuidParse } from 'uuid';
-
-// Parse a UUID
-const bytes = uuidParse('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
-
-// Convert to hex strings to show byte order (for documentation purposes)
-[...bytes].map((v) => v.toString(16).padStart(2, '0')); // ⇨ 
-  // [
-  //   '6e', 'c0', 'bd', '7f',
-  //   '11', 'c0', '43', 'da',
-  //   '97', '5e', '2a', '8a',
-  //   'd9', 'eb', 'ae', '0b'
-  // ]
+```bash
+npm install mongodb
 ```
 
-### uuid.stringify(arr[, offset])
+### Start a MongoDB Server
 
-Convert array of bytes to UUID string
+For complete MongoDB installation instructions, see [the manual](https://docs.mongodb.org/manual/installation/).
 
-|                |                                                                              |
-| -------------- | ---------------------------------------------------------------------------- |
-| `arr`          | `Array`-like collection of 16 values (starting from `offset`) between 0-255. |
-| [`offset` = 0] | `Number` Starting index in the Array                                         |
-| _returns_      | `String`                                                                     |
-| _throws_       | `TypeError` if a valid UUID string cannot be generated                       |
+1. Download the right MongoDB version from [MongoDB](https://www.mongodb.org/downloads)
+2. Create a database directory (in this case under **/data**).
+3. Install and start a `mongod` process.
 
-Note: Ordering of values in the byte arrays used by `parse()` and `stringify()` follows the left &Rarr; right order of hex-pairs in UUID strings. As shown in the example below.
-
-Example:
-
-```javascript
-import { stringify as uuidStringify } from 'uuid';
-
-const uuidBytes = [
-  0x6e, 0xc0, 0xbd, 0x7f, 0x11, 0xc0, 0x43, 0xda, 0x97, 0x5e, 0x2a, 0x8a, 0xd9, 0xeb, 0xae, 0x0b,
-];
-
-uuidStringify(uuidBytes); // ⇨ '6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b'
+```bash
+mongod --dbpath=/data
 ```
 
-### uuid.v1([options[, buffer[, offset]]])
+You should see the **mongod** process start up and print some status information.
 
-Create an RFC version 1 (timestamp) UUID
+### Connect to MongoDB
 
-|  |  |
-| --- | --- |
-| [`options`] | `Object` with one or more of the following properties: |
-| [`options.node` ] | RFC "node" field as an `Array[6]` of byte values (per 4.1.6) |
-| [`options.clockseq`] | RFC "clock sequence" as a `Number` between 0 - 0x3fff |
-| [`options.msecs`] | RFC "timestamp" field (`Number` of milliseconds, unix epoch) |
-| [`options.nsecs`] | RFC "timestamp" field (`Number` of nanseconds to add to `msecs`, should be 0-10,000) |
-| [`options.random`] | `Array` of 16 random bytes (0-255) |
-| [`options.rng`] | Alternative to `options.random`, a `Function` that returns an `Array` of 16 random bytes (0-255) |
-| [`buffer`] | `Array \| Buffer` If specified, uuid will be written here in byte-form, starting at `offset` |
-| [`offset` = 0] | `Number` Index to start writing UUID bytes in `buffer` |
-| _returns_ | UUID `String` if no `buffer` is specified, otherwise returns `buffer` |
-| _throws_ | `Error` if more than 10M UUIDs/sec are requested |
+Create a new **app.js** file and add the following code to try out some basic CRUD
+operations using the MongoDB driver.
 
-Note: The default [node id](https://tools.ietf.org/html/rfc4122#section-4.1.6) (the last 12 digits in the UUID) is generated once, randomly, on process startup, and then remains unchanged for the duration of the process.
+Add code to connect to the server and the database **myProject**:
 
-Note: `options.random` and `options.rng` are only meaningful on the very first call to `v1()`, where they may be passed to initialize the internal `node` and `clockseq` fields.
+> **NOTE:** All the examples below use async/await syntax.
+>
+> However, all async API calls support an optional callback as the final argument,
+> if a callback is provided a Promise will not be returned.
 
-Example:
+```js
+const { MongoClient } = require('mongodb');
+// or as an es module:
+// import { MongoClient } from 'mongodb'
 
-```javascript
-import { v1 as uuidv1 } from 'uuid';
+// Connection URL
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
 
-uuidv1(); // ⇨ '2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d'
-```
+// Database Name
+const dbName = 'myProject';
 
-Example using `options`:
+async function main() {
+  // Use connect method to connect to the server
+  await client.connect();
+  console.log('Connected successfully to server');
+  const db = client.db(dbName);
+  const collection = db.collection('documents');
 
-```javascript
-import { v1 as uuidv1 } from 'uuid';
+  // the following code examples can be pasted here...
 
-const v1options = {
-  node: [0x01, 0x23, 0x45, 0x67, 0x89, 0xab],
-  clockseq: 0x1234,
-  msecs: new Date('2011-11-01').getTime(),
-  nsecs: 5678,
-};
-uuidv1(v1options); // ⇨ '710b962e-041c-11e1-9234-0123456789ab'
-```
-
-### uuid.v3(name, namespace[, buffer[, offset]])
-
-Create an RFC version 3 (namespace w/ MD5) UUID
-
-API is identical to `v5()`, but uses "v3" instead.
-
-&#x26a0;&#xfe0f; Note: Per the RFC, "_If backward compatibility is not an issue, SHA-1 [Version 5] is preferred_."
-
-### uuid.v4([options[, buffer[, offset]]])
-
-Create an RFC version 4 (random) UUID
-
-|  |  |
-| --- | --- |
-| [`options`] | `Object` with one or more of the following properties: |
-| [`options.random`] | `Array` of 16 random bytes (0-255) |
-| [`options.rng`] | Alternative to `options.random`, a `Function` that returns an `Array` of 16 random bytes (0-255) |
-| [`buffer`] | `Array \| Buffer` If specified, uuid will be written here in byte-form, starting at `offset` |
-| [`offset` = 0] | `Number` Index to start writing UUID bytes in `buffer` |
-| _returns_ | UUID `String` if no `buffer` is specified, otherwise returns `buffer` |
-
-Example:
-
-```javascript
-import { v4 as uuidv4 } from 'uuid';
-
-uuidv4(); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
-```
-
-Example using predefined `random` values:
-
-```javascript
-import { v4 as uuidv4 } from 'uuid';
-
-const v4options = {
-  random: [
-    0x10, 0x91, 0x56, 0xbe, 0xc4, 0xfb, 0xc1, 0xea, 0x71, 0xb4, 0xef, 0xe1, 0x67, 0x1c, 0x58, 0x36,
-  ],
-};
-uuidv4(v4options); // ⇨ '109156be-c4fb-41ea-b1b4-efe1671c5836'
-```
-
-### uuid.v5(name, namespace[, buffer[, offset]])
-
-Create an RFC version 5 (namespace w/ SHA-1) UUID
-
-|  |  |
-| --- | --- |
-| `name` | `String \| Array` |
-| `namespace` | `String \| Array[16]` Namespace UUID |
-| [`buffer`] | `Array \| Buffer` If specified, uuid will be written here in byte-form, starting at `offset` |
-| [`offset` = 0] | `Number` Index to start writing UUID bytes in `buffer` |
-| _returns_ | UUID `String` if no `buffer` is specified, otherwise returns `buffer` |
-
-Note: The RFC `DNS` and `URL` namespaces are available as `v5.DNS` and `v5.URL`.
-
-Example with custom namespace:
-
-```javascript
-import { v5 as uuidv5 } from 'uuid';
-
-// Define a custom namespace.  Readers, create your own using something like
-// https://www.uuidgenerator.net/
-const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-
-uuidv5('Hello, World!', MY_NAMESPACE); // ⇨ '630eb68f-e0fa-5ecc-887a-7c7a62614681'
-```
-
-Example with RFC `URL` namespace:
-
-```javascript
-import { v5 as uuidv5 } from 'uuid';
-
-uuidv5('https://www.w3.org/', uuidv5.URL); // ⇨ 'c106a26a-21bb-5538-8bf2-57095d1976c1'
-```
-
-### uuid.validate(str)
-
-Test a string to see if it is a valid UUID
-
-|           |                                                     |
-| --------- | --------------------------------------------------- |
-| `str`     | `String` to validate                                |
-| _returns_ | `true` if string is a valid UUID, `false` otherwise |
-
-Example:
-
-```javascript
-import { validate as uuidValidate } from 'uuid';
-
-uuidValidate('not a UUID'); // ⇨ false
-uuidValidate('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b'); // ⇨ true
-```
-
-Using `validate` and `version` together it is possible to do per-version validation, e.g. validate for only v4 UUIds.
-
-```javascript
-import { version as uuidVersion } from 'uuid';
-import { validate as uuidValidate } from 'uuid';
-
-function uuidValidateV4(uuid) {
-  return uuidValidate(uuid) && uuidVersion(uuid) === 4;
+  return 'done.';
 }
 
-const v1Uuid = 'd9428888-122b-11e1-b85c-61cd3cbb3210';
-const v4Uuid = '109156be-c4fb-41ea-b1b4-efe1671c5836';
-
-uuidValidateV4(v4Uuid); // ⇨ true
-uuidValidateV4(v1Uuid); // ⇨ false
+main()
+  .then(console.log)
+  .catch(console.error)
+  .finally(() => client.close());
 ```
 
-### uuid.version(str)
+Run your app from the command line with:
 
-Detect RFC version of a UUID
-
-|           |                                          |
-| --------- | ---------------------------------------- |
-| `str`     | A valid UUID `String`                    |
-| _returns_ | `Number` The RFC version of the UUID     |
-| _throws_  | `TypeError` if `str` is not a valid UUID |
-
-Example:
-
-```javascript
-import { version as uuidVersion } from 'uuid';
-
-uuidVersion('45637ec4-c85f-11ea-87d0-0242ac130003'); // ⇨ 1
-uuidVersion('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b'); // ⇨ 4
+```bash
+node app.js
 ```
 
-## Command Line
+The application should print **Connected successfully to server** to the console.
 
-UUIDs can be generated from the command line using `uuid`.
+### Insert a Document
 
-```shell
-$ npx uuid
-ddeb27fb-d9a0-4624-be4d-4615062daed4
+Add to **app.js** the following function which uses the **insertMany**
+method to add three documents to the **documents** collection.
+
+```js
+const insertResult = await collection.insertMany([{ a: 1 }, { a: 2 }, { a: 3 }]);
+console.log('Inserted documents =>', insertResult);
 ```
 
-The default is to generate version 4 UUIDS, however the other versions are supported. Type `uuid --help` for details:
+The **insertMany** command returns an object with information about the insert operations.
 
-```shell
-$ npx uuid --help
+### Find All Documents
 
-Usage:
-  uuid
-  uuid v1
-  uuid v3 <name> <namespace uuid>
-  uuid v4
-  uuid v5 <name> <namespace uuid>
-  uuid --help
+Add a query that returns all the documents.
 
-Note: <namespace uuid> may be "URL" or "DNS" to use the corresponding UUIDs
-defined by RFC4122
+```js
+const findResult = await collection.find({}).toArray();
+console.log('Found documents =>', findResult);
 ```
 
-## ECMAScript Modules
+This query returns all the documents in the **documents** collection.
+If you add this below the insertMany example you'll see the document's you've inserted.
 
-This library comes with [ECMAScript Modules](https://www.ecma-international.org/ecma-262/6.0/#sec-modules) (ESM) support for Node.js versions that support it ([example](./examples/node-esmodules/)) as well as bundlers like [rollup.js](https://rollupjs.org/guide/en/#tree-shaking) ([example](./examples/browser-rollup/)) and [webpack](https://webpack.js.org/guides/tree-shaking/) ([example](./examples/browser-webpack/)) (targeting both, Node.js and browser environments).
+### Find Documents with a Query Filter
 
-```javascript
-import { v4 as uuidv4 } from 'uuid';
-uuidv4(); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+Add a query filter to find only documents which meet the query criteria.
+
+```js
+const filteredDocs = await collection.find({ a: 3 }).toArray();
+console.log('Found documents filtered by { a: 3 } =>', filteredDocs);
 ```
 
-To run the examples you must first create a dist build of this library in the module root:
+Only the documents which match `'a' : 3` should be returned.
 
-```shell
-npm run build
+### Update a document
+
+The following operation updates a document in the **documents** collection.
+
+```js
+const updateResult = await collection.updateOne({ a: 3 }, { $set: { b: 1 } });
+console.log('Updated documents =>', updateResult);
 ```
 
-## CDN Builds
+The method updates the first document where the field **a** is equal to **3** by adding a new field **b** to the document set to **1**. `updateResult` contains information about whether there was a matching document to update or not.
 
-### ECMAScript Modules
+### Remove a document
 
-To load this module directly into modern browsers that [support loading ECMAScript Modules](https://caniuse.com/#feat=es6-module) you can make use of [jspm](https://jspm.org/):
+Remove the document where the field **a** is equal to **3**.
 
-```html
-<script type="module">
-  import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
-  console.log(uuidv4()); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
-</script>
+```js
+const deleteResult = await collection.deleteMany({ a: 3 });
+console.log('Deleted documents =>', deleteResult);
 ```
 
-### UMD
+### Index a Collection
 
-As of `uuid@9` [UMD (Universal Module Definition)](https://github.com/umdjs/umd) builds are no longer shipped with this library.
+[Indexes](https://docs.mongodb.org/manual/indexes/) can improve your application's
+performance. The following function creates an index on the **a** field in the
+**documents** collection.
 
-If you need a UMD build of this library, use a bundler like Webpack or Rollup. Alternatively, refer to the documentation of [`uuid@8.3.2`](https://github.com/uuidjs/uuid/blob/v8.3.2/README.md#umd) which was the last version that shipped UMD builds.
-
-## Known issues
-
-### Duplicate UUIDs (Googlebot)
-
-This module may generate duplicate UUIDs when run in clients with _deterministic_ random number generators, such as [Googlebot crawlers](https://developers.google.com/search/docs/advanced/crawling/overview-google-crawlers). This can cause problems for apps that expect client-generated UUIDs to always be unique. Developers should be prepared for this and have a strategy for dealing with possible collisions, such as:
-
-- Check for duplicate UUIDs, fail gracefully
-- Disable write operations for Googlebot clients
-
-### "getRandomValues() not supported"
-
-This error occurs in environments where the standard [`crypto.getRandomValues()`](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues) API is not supported. This issue can be resolved by adding an appropriate polyfill:
-
-### React Native / Expo
-
-1. Install [`react-native-get-random-values`](https://github.com/LinusU/react-native-get-random-values#readme)
-1. Import it _before_ `uuid`. Since `uuid` might also appear as a transitive dependency of some other imports it's safest to just import `react-native-get-random-values` as the very first thing in your entry point:
-
-```javascript
-import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
+```js
+const indexName = await collection.createIndex({ a: 1 });
+console.log('index name =', indexName);
 ```
 
-Note: If you are using Expo, you must be using at least `react-native-get-random-values@1.5.0` and `expo@39.0.0`.
+For more detailed information, see the [indexing strategies page](https://docs.mongodb.com/manual/applications/indexes/).
 
-### Web Workers / Service Workers (Edge <= 18)
+## Error Handling
 
-[In Edge <= 18, Web Crypto is not supported in Web Workers or Service Workers](https://caniuse.com/#feat=cryptography) and we are not aware of a polyfill (let us know if you find one, please).
+If you need to filter certain errors from our driver we have a helpful tree of errors described in [etc/notes/errors.md](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md).
 
-### IE 11 (Internet Explorer)
+It is our recommendation to use `instanceof` checks on errors and to avoid relying on parsing `error.message` and `error.name` strings in your code.
+We guarantee `instanceof` checks will pass according to semver guidelines, but errors may be sub-classed or their messages may change at any time, even patch releases, as we see fit to increase the helpfulness of the errors.
 
-Support for IE11 and other legacy browsers has been dropped as of `uuid@9`. If you need to support legacy browsers, you can always transpile the uuid module source yourself (e.g. using [Babel](https://babeljs.io/)).
+Any new errors we add to the driver will directly extend an existing error class and no existing error will be moved to a different parent class outside of a major release.
+This means `instanceof` will always be able to accurately capture the errors that our driver throws (or returns in a callback).
 
-## Upgrading From `uuid@7`
+```typescript
+const client = new MongoClient(url);
+await client.connect();
+const collection = client.db().collection('collection');
 
-### Only Named Exports Supported When Using with Node.js ESM
-
-`uuid@7` did not come with native ECMAScript Module (ESM) support for Node.js. Importing it in Node.js ESM consequently imported the CommonJS source with a default export. This library now comes with true Node.js ESM support and only provides named exports.
-
-Instead of doing:
-
-```javascript
-import uuid from 'uuid';
-uuid.v4();
+try {
+  await collection.insertOne({ _id: 1 });
+  await collection.insertOne({ _id: 1 }); // duplicate key error
+} catch (error) {
+  if (error instanceof MongoServerError) {
+    console.log(`Error worth logging: ${error}`); // special case for some reason
+  }
+  throw error; // still want to crash
+}
 ```
 
-you will now have to use the named exports:
+## Next Steps
 
-```javascript
-import { v4 as uuidv4 } from 'uuid';
-uuidv4();
-```
+- [MongoDB Documentation](https://docs.mongodb.com/manual/)
+- [MongoDB Node Driver Documentation](https://docs.mongodb.com/drivers/node/)
+- [Read about Schemas](https://docs.mongodb.com/manual/core/data-modeling-introduction/)
+- [Star us on GitHub](https://github.com/mongodb/node-mongodb-native)
 
-### Deep Requires No Longer Supported
+## License
 
-Deep requires like `require('uuid/v4')` [which have been deprecated in `uuid@7`](#deep-requires-now-deprecated) are no longer supported.
+[Apache 2.0](LICENSE.md)
 
-## Upgrading From `uuid@3`
-
-"_Wait... what happened to `uuid@4` thru `uuid@6`?!?_"
-
-In order to avoid confusion with RFC [version 4](#uuidv4options-buffer-offset) and [version 5](#uuidv5name-namespace-buffer-offset) UUIDs, and a possible [version 6](http://gh.peabody.io/uuidv6/), releases 4 thru 6 of this module have been skipped.
-
-### Deep Requires Now Deprecated
-
-`uuid@3` encouraged the use of deep requires to minimize the bundle size of browser builds:
-
-```javascript
-const uuidv4 = require('uuid/v4'); // <== NOW DEPRECATED!
-uuidv4();
-```
-
-As of `uuid@7` this library now provides ECMAScript modules builds, which allow packagers like Webpack and Rollup to do "tree-shaking" to remove dead code. Instead, use the `import` syntax:
-
-```javascript
-import { v4 as uuidv4 } from 'uuid';
-uuidv4();
-```
-
-... or for CommonJS:
-
-```javascript
-const { v4: uuidv4 } = require('uuid');
-uuidv4();
-```
-
-### Default Export Removed
-
-`uuid@3` was exporting the Version 4 UUID method as a default export:
-
-```javascript
-const uuid = require('uuid'); // <== REMOVED!
-```
-
-This usage pattern was already discouraged in `uuid@3` and has been removed in `uuid@7`.
-
-----
-Markdown generated from [README_js.md](README_js.md) by [![RunMD Logo](https://i.imgur.com/h0FVyzU.png)](https://github.com/broofa/runmd)
+© 2009-2012 Christian Amor Kvalheim
+© 2012-present MongoDB [Contributors](https://github.com/mongodb/node-mongodb-native/blob/HEAD/CONTRIBUTORS.md)
